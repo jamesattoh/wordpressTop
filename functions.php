@@ -133,37 +133,82 @@ function cookinfamily_settings_field_email_output() {
 }
 
 
-// developpement d'un type de contenu via le code
+/**
+ * Enregistre un nouveau type de contenu personnalisé (Custom Post Type) pour les ingrédients
+ * Cette fonction est appelée lors de l'initialisation de WordPress
+ */
 function cookinfamily_register_custom_post_types() {    
+    // Définition des labels (textes) qui apparaîtront dans l'interface d'administration
     $labels_ingredient = array(    
-        'menu_name'         => __('Ingrédients', 'cookinfamily'),    
-        'name_admin_bar'    => __('Ingrédient', 'cookinfamily'),       
-        'add_new_item'      => __('Ajouter un nouvel ingrédient', 'cookinfamily'),       
-        'new_item'          => __('Nouvel ingrédient', 'cookinfamily'),       
-        'edit_item'         => __('Modifier l\'ingrédient', 'cookinfamily'),    
+        'menu_name'         => __('Ingrédients', 'cookinfamily'),    // Nom dans le menu
+        'name_admin_bar'    => __('Ingrédient', 'cookinfamily'),     // Nom dans la barre d'admin
+        'add_new_item'      => __('Ajouter un nouvel ingrédient', 'cookinfamily'),  // Texte pour ajouter     
+        'new_item'          => __('Nouvel ingrédient', 'cookinfamily'),     // Texte pour nouveau
+        'edit_item'         => __('Modifier l\'ingrédient', 'cookinfamily'), // Texte pour modifier
     );
 
+    // Configuration complète du Custom Post Type
     $args_ingredient = array(    
         'label'                 => __('Ingrédients', 'cookinfamily'),    
         'description'           => __('Ingrédients', 'cookinfamily'),    
-        'labels'                => $labels_ingredient,    
-        'supports'              => array('title', 'thumbnail', 'excerpt', 'editor'),    
-        'hierarchical'          => false,    
-        'public'                => true,    
-        'show_ui'               => true,    
-        'show_in_menu'          => true,    
-        'menu_position'         => 40,    
-        'show_in_admin_bar'     => true,    
-        'show_in_nav_menus'     => true,    
-        'can_export'            => true,    
-        'has_archive'           => true,    
-        'exclude_from_search'   => false,    
-        'publicly_queryable'    => true,    
-        'capability_type'       => 'post',    
-        'menu_icon'             => 'dashicons-drumstick',    
+        'labels'                => $labels_ingredient,    // Utilise les labels définis ci-dessus
+        'supports'              => array('title', 'thumbnail', 'excerpt', 'editor'),  // Fonctionnalités supportées
+        'hierarchical'          => false,    // false = format post, true = format page
+        'public'                => true,     // Visible pour le public
+        'show_ui'               => true,     // Affiche interface dans l'admin
+        'show_in_menu'          => true,     // Affiche dans le menu admin
+        'menu_position'         => 40,       // Position dans le menu (40 = après Comments)
+        'show_in_admin_bar'     => true,     // Visible dans la barre d'admin
+        'show_in_nav_menus'     => true,     // Peut être utilisé dans les menus
+        'can_export'            => true,     // Peut être exporté
+        'has_archive'           => true,     // Active les pages d'archives
+        'exclude_from_search'   => false,    // Inclus dans la recherche
+        'publicly_queryable'    => true,     // Accessible via les requêtes publiques
+        'capability_type'       => 'post',   // Utilise les mêmes capacités qu'un post
+        'menu_icon'             => 'dashicons-drumstick',  // Icône dans le menu admin
     ); 
 
+    // Enregistre le Custom Post Type avec WordPress
     register_post_type('cif_ingredient', $args_ingredient);
 }
-
+// Hook la fonction à l'initialisation de WordPress avec priorité 11
 add_action('init', 'cookinfamily_register_custom_post_types', 11);
+
+
+/**
+ * Enregistre une nouvelle taxonomie pour classer les recettes par type de plat
+ * Une taxonomie permet de catégoriser les contenus
+ * C'est ce qui s'affiche (déroule verticalement vers le bas) lorsqu'on clique sur un type de contenu dans le menu de gauche du back-office
+ */
+function cookinfamily_register_taxonomies() {
+    // Définition des labels pour la taxonomie
+    $labels = array(
+        'name'              => __( 'Type de plat' ),          // Nom général
+        'singular_name'     => __( 'Type de plat' ),          // Nom au singulier
+        'search_items'      => __( 'Rechercher un type de plat' ),  // Texte de recherche
+        'all_items'         => __( 'Tous les types de plats' ),     // Liste tous les items
+        'parent_item'       => __( 'Parent Type de plat' ),         // Item parent
+        'parent_item_colon' => __( 'Parent Type de plat:' ),        // Item parent avec colon
+        'edit_item'         => __( 'Modifier un type de plat' ),    // Modification
+        'update_item'       => __( 'Mettre à jour un type de plat' ),  // Mise à jour
+        'add_new_item'      => __( 'Ajouter un nouveau type de plat' ), // Ajout
+        'new_item_name'     => __( 'Nouveau type de plat' ),        // Nouveau nom
+        'menu_name'         => __( 'Type de plat' )                 // Nom dans le menu
+    );
+
+    // Configuration de la taxonomie
+    $args = array(
+        'hierarchical'      => true,         // true = comme les catégories, false = comme les tags
+        'labels'            => $labels,       // Utilise les labels définis ci-dessus
+        'show_ui'           => true,         // Interface dans l'admin
+        'show_admin_column' => true,         // Colonne dans la liste des posts
+        'query_var'         => true,         // Peut être requêté
+        'show_in_rest'      => true,         // Support de Gutenberg
+        'rewrite'           => array( 'slug' => 'type-de-plat' )  // URL pour les archives
+    );
+
+    // Enregistre la taxonomie et l'associe au type de contenu 'recettes'
+    register_taxonomy('type_de_plat', array( 'recettes' ), $args);
+}
+// Hook la fonction à l'initialisation de WordPress
+add_action('init', 'cookinfamily_register_taxonomies');
