@@ -131,4 +131,3 @@ function cookinfamily_settings_field_email_output() {
     $value = get_option('cookinfamily_settings_field_email');
     echo '<input name="cookinfamily_settings_field_email" type="text" value="' . $value . '" />';
 }
-
