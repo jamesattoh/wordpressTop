@@ -70,6 +70,22 @@ function cookinfamily_settings_register() {
         'cookinfamily-settings',                    // Page cible
         'cookinfamily_settings_section'             // Section cible
     );
+
+    add_settings_field(
+        'cookinfamily_settings_field_phone_number', // ID unique
+        __('Numéro de téléphone', 'cookinfamily'),         // Label
+        'cookinfamily_settings_field_phone_number_output', // Callback d'affichage
+        'cookinfamily-settings',                    // Page cible
+        'cookinfamily_settings_section'             // Section cible
+    );
+
+    add_settings_field(
+        'cookinfamily_settings_field_email', // ID unique
+        __('Adresse mail', 'cookinfamily'),         // Label
+        'cookinfamily_settings_field_email_output', // Callback d'affichage
+        'cookinfamily-settings',                    // Page cible
+        'cookinfamily_settings_section'             // Section cible
+    );
 }
 add_action('admin_init', 'cookinfamily_settings_register');
 
@@ -84,12 +100,12 @@ function cookinfamily_settings_fields_validate($inputs) {
         if (!empty($_POST['cookinfamily_settings_field_introduction'])) {
             update_option('cookinfamily_settings_field_introduction', $_POST['cookinfamily_settings_field_introduction']);
         }
-        // if (!empty($_POST['cookinfamily_settings_field_phone_number'])) {
-        //     update_option('cookinfamily_settings_field_phone_number', $_POST['cookinfamily_settings_field_phone_number']);
-        // }
-        // if (!empty($_POST['cookinfamily_settings_field_email'])) {
-        //     update_option('cookinfamily_settings_field_email', $_POST['cookinfamily_settings_field_email']);
-        // }
+        if (!empty($_POST['cookinfamily_settings_field_phone_number'])) {
+            update_option('cookinfamily_settings_field_phone_number', $_POST['cookinfamily_settings_field_phone_number']);
+        }
+        if (!empty($_POST['cookinfamily_settings_field_email'])) {
+            update_option('cookinfamily_settings_field_email', $_POST['cookinfamily_settings_field_email']);
+        }
     }
     return $inputs;
 }
@@ -99,9 +115,20 @@ function cookinfamily_settings_section_introduction() {
     _e('Paramètrez les différentes options de votre thème CookInFamily.', 'cookinfamily'); // _e() est identique à echo __()
 }
 
+
 // Affiche le champ Introduction
 function cookinfamily_settings_field_introduction_output() {
     $value = get_option('cookinfamily_settings_field_introduction');
     echo '<input name="cookinfamily_settings_field_introduction" type="text" value="' . $value . '" />';
+}
+// Affiche le champ telephone
+function cookinfamily_settings_field_phone_number_output() {
+    $value = get_option('cookinfamily_settings_field_phone_number');
+    echo '<input name="cookinfamily_settings_field_phone_number" type="text" value="' . $value . '" />';
+}
+// Affiche le champ email
+function cookinfamily_settings_field_email_output() {
+    $value = get_option('cookinfamily_settings_field_email');
+    echo '<input name="cookinfamily_settings_field_email" type="text" value="' . $value . '" />';
 }
 
