@@ -209,6 +209,37 @@ function cookinfamily_register_taxonomies() {
 
     // Enregistre la taxonomie et l'associe au type de contenu 'recettes'
     register_taxonomy('type_de_plat', array( 'recettes' ), $args);
+
+
+    
+    // Définition des labels pour la taxonomie
+    $labels = array(
+        'name'              => __( 'Régime alimentaire' ),          // Nom général
+        'singular_name'     => __( 'Régime alimentaire' ),          // Nom au singulier
+        'search_items'      => __( 'Rechercher un régime alimentaire' ),  // Texte de recherche
+        'all_items'         => __( 'Tous les régimes alimmentaires' ),     // Liste tous les items
+        'parent_item'       => __( 'Parent régime alimentaire' ),         // Item parent
+        'parent_item_colon' => __( 'Parent régime alimentaire:' ),        // Item parent avec colon
+        'edit_item'         => __( 'Modifier un régime alimentaire' ),    // Modification
+        'update_item'       => __( 'Mettre à jour un régime alimentaire' ),  // Mise à jour
+        'add_new_item'      => __( 'Ajouter un nouveau régime alimentaire' ), // Ajout
+        'new_item_name'     => __( 'Nouveau régime alimentaire' ),        // Nouveau nom
+        'menu_name'         => __( 'Régime alimentaire' )                 // Nom dans le menu
+    );
+
+    // Configuration de la taxonomie
+    $args = array(
+        'hierarchical'      => true,         // true = comme les catégories, false = comme les tags
+        'labels'            => $labels,       // Utilise les labels définis ci-dessus
+        'show_ui'           => true,         // Interface dans l'admin
+        'show_admin_column' => true,         // Colonne dans la liste des posts
+        'query_var'         => true,         // Peut être requêté
+        'show_in_rest'      => true,         // Support de Gutenberg
+        'rewrite'           => array( 'slug' => 'regime-alimentaire' )  // URL pour les archives
+    );
+
+    // Enregistre la taxonomie et l'associe au type de contenu 'recettes'
+    register_taxonomy('regime-alimentaire', array( 'recettes' ), $args);
 }
 // Hook la fonction à l'initialisation de WordPress
 add_action('init', 'cookinfamily_register_taxonomies');
