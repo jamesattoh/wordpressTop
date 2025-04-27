@@ -5,7 +5,8 @@
  */
 
 // creation d'une nouvelle page dans le menu d'administration
-function cookinfamily_add_admin_pages() {
+function cookinfamily_add_admin_pages()
+{
     add_menu_page(
         __('Paramètres du thème CookInFamily', 'cookinfamily'),
         __('CookInFamily', 'cookinfamily'),
@@ -23,19 +24,20 @@ add_action('admin_menu', 'cookinfamily_add_admin_pages'); // Hook qui ajoute not
  * S2: AFFICHAGE DU CONTENU DE LA PAGE
  */
 
-function cookinfamily_theme_settings() {
+function cookinfamily_theme_settings()
+{
     // Affiche le formulaire des paramètres
     echo '<h1>' . esc_html(get_admin_page_title()) . '</h1>'; // esc_html prévient les attaques XSS en convertissant les caractères spéciaux HTML en entités HTML
 
     echo '<form action="options.php" method="post" name="cookinfamily_settings">';
 
-        echo '<div>';
+    echo '<div>';
 
-            settings_fields('cookinfamily_settings_fields'); // en unique paramètre, le nom du groupe du lot de réglages.
-            do_settings_sections('cookinfamily-settings'); // on lui passe l’identifiant de la page et elle va afficher les champs associés aux sections
-            submit_button(); // c'est le bouton "Engeristrer les modifications"
+    settings_fields('cookinfamily_settings_fields'); // en unique paramètre, le nom du groupe du lot de réglages.
+    do_settings_sections('cookinfamily-settings'); // on lui passe l’identifiant de la page et elle va afficher les champs associés aux sections
+    submit_button(); // c'est le bouton "Engeristrer les modifications"
 
-        echo '</div>';
+    echo '</div>';
 
     echo '</form>';
 }
@@ -46,7 +48,8 @@ function cookinfamily_theme_settings() {
  */
 
 //Initialise les paramètres et sections de la page d'options
-function cookinfamily_settings_register() {
+function cookinfamily_settings_register()
+{
     // 1. Enregistrement du groupe de paramètres
     register_setting( // s'exécute lors du chargement de la page d'admin de WordPress (via le hook admin_init), et sert à déclarer un réglage auprès de WordPress
         'cookinfamily_settings_fields',      // Groupe d'options
@@ -95,7 +98,8 @@ add_action('admin_init', 'cookinfamily_settings_register');
  */
 
 // pour nettoyer et valider les données soumises par le formulaire
-function cookinfamily_settings_fields_validate($inputs) {
+function cookinfamily_settings_fields_validate($inputs)
+{
     if (!empty($_POST)) {
         if (!empty($_POST['cookinfamily_settings_field_introduction'])) {
             update_option('cookinfamily_settings_field_introduction', $_POST['cookinfamily_settings_field_introduction']);
@@ -111,23 +115,27 @@ function cookinfamily_settings_fields_validate($inputs) {
 }
 
 // Affiche le texte d'introduction de la section des paramètres
-function cookinfamily_settings_section_introduction() {
+function cookinfamily_settings_section_introduction()
+{
     _e('Paramètrez les différentes options de votre thème CookInFamily.', 'cookinfamily'); // _e() est identique à echo __()
 }
 
 
 // Affiche le champ Introduction
-function cookinfamily_settings_field_introduction_output() {
+function cookinfamily_settings_field_introduction_output()
+{
     $value = get_option('cookinfamily_settings_field_introduction');
     echo '<input name="cookinfamily_settings_field_introduction" type="text" value="' . $value . '" />';
 }
 // Affiche le champ telephone
-function cookinfamily_settings_field_phone_number_output() {
+function cookinfamily_settings_field_phone_number_output()
+{
     $value = get_option('cookinfamily_settings_field_phone_number');
     echo '<input name="cookinfamily_settings_field_phone_number" type="text" value="' . $value . '" />';
 }
 // Affiche le champ email
-function cookinfamily_settings_field_email_output() {
+function cookinfamily_settings_field_email_output()
+{
     $value = get_option('cookinfamily_settings_field_email');
     echo '<input name="cookinfamily_settings_field_email" type="text" value="' . $value . '" />';
 }
@@ -137,9 +145,10 @@ function cookinfamily_settings_field_email_output() {
  * Enregistre un nouveau type de contenu personnalisé (Custom Post Type) pour les ingrédients
  * Cette fonction est appelée lors de l'initialisation de WordPress
  */
-function cookinfamily_register_custom_post_types() {    
+function cookinfamily_register_custom_post_types()
+{
     // Définition des labels (textes) qui apparaîtront dans l'interface d'administration
-    $labels_ingredient = array(    
+    $labels_ingredient = array(
         'menu_name'         => __('Ingrédients', 'cookinfamily'),    // Nom dans le menu
         'name_admin_bar'    => __('Ingrédient', 'cookinfamily'),     // Nom dans la barre d'admin
         'add_new_item'      => __('Ajouter un nouvel ingrédient', 'cookinfamily'),  // Texte pour ajouter     
@@ -148,9 +157,9 @@ function cookinfamily_register_custom_post_types() {
     );
 
     // Configuration complète du Custom Post Type
-    $args_ingredient = array(    
-        'label'                 => __('Ingrédients', 'cookinfamily'),    
-        'description'           => __('Ingrédients', 'cookinfamily'),    
+    $args_ingredient = array(
+        'label'                 => __('Ingrédients', 'cookinfamily'),
+        'description'           => __('Ingrédients', 'cookinfamily'),
         'labels'                => $labels_ingredient,    // Utilise les labels définis ci-dessus
         'supports'              => array('title', 'thumbnail', 'excerpt', 'editor'),  // Fonctionnalités supportées
         'hierarchical'          => false,    // false = format post, true = format page
@@ -166,7 +175,7 @@ function cookinfamily_register_custom_post_types() {
         'publicly_queryable'    => true,     // Accessible via les requêtes publiques
         'capability_type'       => 'post',   // Utilise les mêmes capacités qu'un post
         'menu_icon'             => 'dashicons-drumstick',  // Icône dans le menu admin
-    ); 
+    );
 
     // Enregistre le Custom Post Type avec WordPress
     register_post_type('cif_ingredient', $args_ingredient);
@@ -180,20 +189,21 @@ add_action('init', 'cookinfamily_register_custom_post_types', 11);
  * Une taxonomie permet de catégoriser les contenus
  * C'est ce qui s'affiche (déroule verticalement vers le bas) lorsqu'on clique sur un type de contenu dans le menu de gauche du back-office
  */
-function cookinfamily_register_taxonomies() {
+function cookinfamily_register_taxonomies()
+{
     // Définition des labels pour la taxonomie
     $labels = array(
-        'name'              => __( 'Type de plat' ),          // Nom général
-        'singular_name'     => __( 'Type de plat' ),          // Nom au singulier
-        'search_items'      => __( 'Rechercher un type de plat' ),  // Texte de recherche
-        'all_items'         => __( 'Tous les types de plats' ),     // Liste tous les items
-        'parent_item'       => __( 'Parent Type de plat' ),         // Item parent
-        'parent_item_colon' => __( 'Parent Type de plat:' ),        // Item parent avec colon
-        'edit_item'         => __( 'Modifier un type de plat' ),    // Modification
-        'update_item'       => __( 'Mettre à jour un type de plat' ),  // Mise à jour
-        'add_new_item'      => __( 'Ajouter un nouveau type de plat' ), // Ajout
-        'new_item_name'     => __( 'Nouveau type de plat' ),        // Nouveau nom
-        'menu_name'         => __( 'Type de plat' )                 // Nom dans le menu
+        'name'              => __('Type de plat'),          // Nom général
+        'singular_name'     => __('Type de plat'),          // Nom au singulier
+        'search_items'      => __('Rechercher un type de plat'),  // Texte de recherche
+        'all_items'         => __('Tous les types de plats'),     // Liste tous les items
+        'parent_item'       => __('Parent Type de plat'),         // Item parent
+        'parent_item_colon' => __('Parent Type de plat:'),        // Item parent avec colon
+        'edit_item'         => __('Modifier un type de plat'),    // Modification
+        'update_item'       => __('Mettre à jour un type de plat'),  // Mise à jour
+        'add_new_item'      => __('Ajouter un nouveau type de plat'), // Ajout
+        'new_item_name'     => __('Nouveau type de plat'),        // Nouveau nom
+        'menu_name'         => __('Type de plat')                 // Nom dans le menu
     );
 
     // Configuration de la taxonomie
@@ -204,27 +214,27 @@ function cookinfamily_register_taxonomies() {
         'show_admin_column' => true,         // Colonne dans la liste des posts
         'query_var'         => true,         // Peut être requêté
         'show_in_rest'      => true,         // Support de Gutenberg
-        'rewrite'           => array( 'slug' => 'type-de-plat' )  // URL pour les archives
+        'rewrite'           => array('slug' => 'type-de-plat')  // URL pour les archives
     );
 
     // Enregistre la taxonomie et l'associe au type de contenu 'recettes'
-    register_taxonomy('type_de_plat', array( 'recettes' ), $args);
+    register_taxonomy('type_de_plat', array('recettes'), $args);
 
 
-    
+
     // Définition des labels pour la taxonomie
     $labels = array(
-        'name'              => __( 'Régime alimentaire' ),          // Nom général
-        'singular_name'     => __( 'Régime alimentaire' ),          // Nom au singulier
-        'search_items'      => __( 'Rechercher un régime alimentaire' ),  // Texte de recherche
-        'all_items'         => __( 'Tous les régimes alimmentaires' ),     // Liste tous les items
-        'parent_item'       => __( 'Parent régime alimentaire' ),         // Item parent
-        'parent_item_colon' => __( 'Parent régime alimentaire:' ),        // Item parent avec colon
-        'edit_item'         => __( 'Modifier un régime alimentaire' ),    // Modification
-        'update_item'       => __( 'Mettre à jour un régime alimentaire' ),  // Mise à jour
-        'add_new_item'      => __( 'Ajouter un nouveau régime alimentaire' ), // Ajout
-        'new_item_name'     => __( 'Nouveau régime alimentaire' ),        // Nouveau nom
-        'menu_name'         => __( 'Régime alimentaire' )                 // Nom dans le menu
+        'name'              => __('Régime alimentaire'),          // Nom général
+        'singular_name'     => __('Régime alimentaire'),          // Nom au singulier
+        'search_items'      => __('Rechercher un régime alimentaire'),  // Texte de recherche
+        'all_items'         => __('Tous les régimes alimmentaires'),     // Liste tous les items
+        'parent_item'       => __('Parent régime alimentaire'),         // Item parent
+        'parent_item_colon' => __('Parent régime alimentaire:'),        // Item parent avec colon
+        'edit_item'         => __('Modifier un régime alimentaire'),    // Modification
+        'update_item'       => __('Mettre à jour un régime alimentaire'),  // Mise à jour
+        'add_new_item'      => __('Ajouter un nouveau régime alimentaire'), // Ajout
+        'new_item_name'     => __('Nouveau régime alimentaire'),        // Nouveau nom
+        'menu_name'         => __('Régime alimentaire')                 // Nom dans le menu
     );
 
     // Configuration de la taxonomie
@@ -235,11 +245,54 @@ function cookinfamily_register_taxonomies() {
         'show_admin_column' => true,         // Colonne dans la liste des posts
         'query_var'         => true,         // Peut être requêté
         'show_in_rest'      => true,         // Support de Gutenberg
-        'rewrite'           => array( 'slug' => 'regime-alimentaire' )  // URL pour les archives
+        'rewrite'           => array('slug' => 'regime-alimentaire')  // URL pour les archives
     );
 
     // Enregistre la taxonomie et l'associe au type de contenu 'recettes'
-    register_taxonomy('regime-alimentaire', array( 'recettes' ), $args);
+    register_taxonomy('regime-alimentaire', array('recettes'), $args);
 }
 // Hook la fonction à l'initialisation de WordPress
 add_action('init', 'cookinfamily_register_taxonomies');
+
+
+/**
+ * Fonction qui permet de récupérer les recettes via une requête AJAX
+ * Cette fonction sera appelée côté front-end via JavaScript
+ * 
+ * @return void Retourne les données au format JSON
+ */
+function cookinfamily_request_recettes()
+{
+    // Paramètres de la requête WP_Query
+    $args = array(
+        'post_type' => 'recettes',       // Type de contenu personnalisé 'recettes'
+        'posts_per_page' => 2            // Nombre de recettes par page
+    );
+
+    // Exécution de la requête
+    $query = new WP_Query($args);
+
+    // Vérification des résultats
+    if ($query->have_posts()) {
+        $response = $query;              // Stocke les résultats si des recettes sont trouvées
+    } else {
+        $response = false;               // Retourne false si aucune recette n'est trouvée
+    }
+
+    // Envoi de la réponse au format JSON
+    wp_send_json($response);
+
+    // Termine proprement l'exécution du script AJAX
+    wp_die();
+}
+
+// Enregistre les hooks AJAX pour rendre la fonction accessible depuis le front-end
+add_action('wp_ajax_request_recettes', 'cookinfamily_request_recettes');           // Pour les utilisateurs connectés
+add_action('wp_ajax_nopriv_request_recettes', 'cookinfamily_request_recettes');    // Pour les utilisateurs non connectés
+
+/**
+ * Note : Pour appeler cette fonction en AJAX depuis le front-end, utiliser :
+ * URL : /wp-admin/admin-ajax.php
+ * Data : { action: 'request_recettes' }
+ * Method : POST
+ */
