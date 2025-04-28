@@ -296,3 +296,42 @@ add_action('wp_ajax_nopriv_request_recettes', 'cookinfamily_request_recettes'); 
  * Data : { action: 'request_recettes' }
  * Method : POST
  */
+
+
+/**
+ * Enregistre et charge les scripts JavaScript nécessaires au thème
+ * Cette fonction est appelée lors du chargement des scripts WordPress
+ */
+function cookinfamily_scripts() {
+    // Enregistre et charge le script JavaScript principal du thème
+    wp_enqueue_script(
+        'cookinfamily',                                              // Identifiant unique du script
+        get_stylesheet_directory_uri() . '/assets/js/cookinfamily.js', // Chemin vers le fichier JS
+        array('jquery'),                                             // Dépendances (ici jQuery)
+        '1.0.0',                                                     // Numéro de version
+        true                                                         // Chargement dans le footer
+    );
+
+    // Rend l'URL de l'API AJAX WordPress disponible dans JavaScript
+    wp_localize_script(
+        'cookinfamily',                                             // Identifiant du script cible
+        'cookinfamily_js',                                          // Nom de l'objet JavaScript créé
+        array('ajax_url' => admin_url('admin-ajax.php'))            // Variables à passer à JavaScript
+    );
+}
+
+// Enregistre la fonction pour qu'elle soit exécutée pendant le chargement des scripts
+add_action('wp_enqueue_scripts', 'cookinfamily_scripts');
+
+
+/**
+ * Enqueue block template skip link
+ */
+function cookinfamily_enqueue_skip_link() {
+    wp_enqueue_block_template_skip_link();
+}
+add_action('wp_footer', 'cookinfamily_enqueue_skip_link', 1);
+
+// Désactive l'ancienne fonction dépréciée
+remove_action('wp_footer', 'the_block_template_skip_link', 1);
+
