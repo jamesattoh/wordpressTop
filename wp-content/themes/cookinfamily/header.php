@@ -15,7 +15,7 @@
           integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" 
           crossorigin="anonymous">
     
-    <!-- Hook WordPress pour inclure scripts et styles -->
+    <!-- Hook WordPress pour inclure scripts et styles. C'est grâce à ça que le cookinfamily.js est chargé --> 
     <?php wp_head(); ?>
 </head>
 
