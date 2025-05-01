@@ -43,7 +43,7 @@
             </a>
             
             <!-- Menu de navigation -->
-            <ul class="nav nav-pills">
+            <ul class="nav nav-pills flex justify-content-center align-items-center">
                 <!-- Lien vers l'accueil -->
                 <li class="nav-item">
                     <a href="/" class="nav-link link-secondary">
